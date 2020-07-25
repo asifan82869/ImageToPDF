@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="example.javatpoint.com.optionmenu.MainActivity">
+
+    <item  android:id="@+id/sImage"
+        android:title="@string/select_image"/>
+    <item  android:id="@+id/showPDF"
+        android:title="@string/show_pdf"/>
+    <item android:id="@+id/iCamera"
+        android:title="@string/camera"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_camera"
+        />
+
+</menu>

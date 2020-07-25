@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ImageToPDF</string>
+    <string name="mtitle">Select image type</string>
+    <string name="select">Please Selected your image to converting PDF.</string>
+    <string name="delete">Delete</string>
+    <string name="share">Share</string>
+    <string name="camera">camera</string>
+    <string name="select_image">Select image</string>
+    <string name="convert">Convert</string>
+    <string name="cancel">Cancel</string>
+    <string name="show_pdf">Show PDF</string>
+    <string name="file_pdf">file pdf</string>
+    <string name="delete_war">Are you sure to delete file</string>
+
+</resources>
