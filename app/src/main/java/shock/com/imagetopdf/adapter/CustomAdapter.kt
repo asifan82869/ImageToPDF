@@ -1,6 +1,5 @@
 package shock.com.imagetopdf.adapter
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
@@ -10,7 +9,6 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.model.*
-import kotlinx.android.synthetic.main.toolbar.*
 import shock.com.imagetopdf.R
 import shock.com.imagetopdf.view.ShowPDF
 import shock.com.imagetopdf.data.PDFDoc
@@ -33,9 +31,8 @@ class CustomAdapt(private val mContext: ShowPDF, private val pdfDocs: ArrayList<
         return pdfDocs.size
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var pdfDoc = pdfDocs.get(position)
+        var pdfDoc = pdfDocs[position]
         var name = pdfDoc.getName().toString()
         holder.nameTxt.text = name
         if (!inSharingMode){
@@ -62,15 +59,10 @@ class CustomAdapt(private val mContext: ShowPDF, private val pdfDocs: ArrayList<
             true
         }
         holder.checkbox.setOnCheckedChangeListener { compoundButton, b ->
-            pdfDoc.isChecked = b
-            holder.checkbox.isChecked = pdfDoc.isChecked
-//            if (pdfDoc.isChecked){
-//                count++
-//                mContext.itemCounter.text = "$count Selected Items"
-//            }else{
-//                count--
-//                mContext.itemCounter.text = "$count Selected Items"
-//            }
+            if(pdfDoc.isChecked != b) {
+                pdfDoc.isChecked = true
+                Toast.makeText(mContext, "hi", Toast.LENGTH_LONG).show()
+            }
         }
     }
 

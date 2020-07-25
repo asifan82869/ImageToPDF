@@ -16,6 +16,7 @@
             android:id="@+id/pdfImage"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_marginLeft="8dp"
             android:src="@drawable/download"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
@@ -26,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
+            android:layout_marginLeft="15dp"
             android:text="Name"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#000"
@@ -38,10 +40,12 @@
             android:theme="@style/checkBoxStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="5dp"
             android:visibility="gone"
+            tools:visibility="visible"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>

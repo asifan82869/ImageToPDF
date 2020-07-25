@@ -93,8 +93,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun recycle(){
         adapter = ImageAdapter(this)
-        rvImage.adapter = adapter
-        rvImage.layoutManager = GridLayoutManager(this@MainActivity,2)
+        rv.adapter = adapter
+        rv.layoutManager = GridLayoutManager(this@MainActivity,2)
         val itemTouchHelperCallback =
             object :
                 ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0) {
@@ -115,13 +115,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(rvImage)
+        itemTouchHelper.attachToRecyclerView(rv)
     }
 
     private fun clearAll(){
         bitmaps.clear()
-        (rvImage.adapter as ImageAdapter).imageDataList.clear()
-        (rvImage.adapter as ImageAdapter).notifyDataSetChanged()
+        (rv.adapter as ImageAdapter).imageDataList.clear()
+        (rv.adapter as ImageAdapter).notifyDataSetChanged()
         toolbar.menu.clear()
         toolbar.inflateMenu(R.menu.menu)
         supportActionBar?.title = "Image To PDF"
@@ -194,8 +194,8 @@ class MainActivity : AppCompatActivity() {
                     bitmaps.add(_imagefileUri!!)
                 }
             }
-            if(rvImage.adapter is ImageAdapter){
-                (rvImage.adapter as ImageAdapter).addBitmaps(bitmaps)
+            if(rv.adapter is ImageAdapter){
+                (rv.adapter as ImageAdapter).addBitmaps(bitmaps)
             }
             toolbar.menu.clear()
             toolbar.inflateMenu(R.menu.toolbar_meanu_for_convert_nd_cancel)

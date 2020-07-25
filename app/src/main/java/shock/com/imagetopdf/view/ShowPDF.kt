@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.layout_main.*
 import kotlinx.android.synthetic.main.option.view.*
 import kotlinx.android.synthetic.main.toolbar.*
 import shock.com.imagetopdf.R
@@ -108,11 +108,7 @@ class ShowPDF : AppCompatActivity() {
     }
 
     fun pdfshow(){
-        adapter = CustomAdapt(
-            this@ShowPDF,
-            getPDFs(),
-            object :
-                CustomAdapt.ICustomAdaptListener {
+        adapter = CustomAdapt(this@ShowPDF, getPDFs(), object : CustomAdapt.ICustomAdaptListener {
                 @RequiresApi(Build.VERSION_CODES.M)
                 override fun onLongClick() {
                     val adapter =
