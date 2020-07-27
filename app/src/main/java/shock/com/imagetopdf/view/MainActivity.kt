@@ -14,11 +14,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -29,9 +31,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_main.*
 import kotlinx.android.synthetic.main.savefile.view.*
 import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.toolbar.toolbar
 import shock.com.imagetopdf.R
 import shock.com.imagetopdf.adapter.CustomAdapt
 import shock.com.imagetopdf.adapter.ImageAdapter
@@ -281,6 +285,7 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private fun createPdf(){
+        progressbar.visibility = View.VISIBLE
         document = PdfDocument()
         for (i in bitmaps.indices){
             val inputStream = contentResolver.openInputStream(bitmaps[i])
@@ -308,7 +313,10 @@ class MainActivity : AppCompatActivity() {
             val file = getPath(File(Environment.getExternalStorageDirectory().absolutePath),"IMAGE COVERT PDF")
             val fout = FileOutputStream(file)
             document?.writeTo(fout)
-            Toast.makeText(this, "Your image has Successfully converted into PDF. Your file save in '/IMAGE COVERT PDF/' Folder", Toast.LENGTH_LONG).show()
+            Handler().postDelayed({
+                progressbar.visibility = View.GONE
+                Toast.makeText(this, "Your image has Successfully converted into PDF. Your file save in '/IMAGE COVERT PDF/' Folder", Toast.LENGTH_LONG).show()
+            },2000)
         } catch (e: IOException) {
             e.printStackTrace()
             Toast.makeText(this, "Something went wrong...", Toast.LENGTH_SHORT).show()
