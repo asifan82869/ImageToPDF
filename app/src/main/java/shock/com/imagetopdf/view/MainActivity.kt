@@ -16,7 +16,9 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -25,10 +27,13 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.layout_main.*
 import kotlinx.android.synthetic.main.savefile.view.*
 import kotlinx.android.synthetic.main.toolbar.*
 import shock.com.imagetopdf.R
+import shock.com.imagetopdf.adapter.CustomAdapt
 import shock.com.imagetopdf.adapter.ImageAdapter
 import java.io.File
 import java.io.FileNotFoundException
@@ -59,6 +64,14 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Image To PDF"
         permission()
+    }
+
+    override fun onBackPressed() {
+        if(bitmaps.isNotEmpty()){
+            clearAll()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun permission(){
@@ -139,10 +152,13 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
                 intent.type = "image/*"
+                val mimeType = arrayOf("image/jpeg","image/jpg","image/png")
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeType)
+                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 startActivityForResult(intent, GALLERY)
             }
             R.id.iCamera -> {
-                genRandom()
+               genRandom()
                 val intent2 = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 _imagefileUri = Uri.fromFile(getFileCamera())
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, _imagefileUri)
@@ -173,27 +189,61 @@ class MainActivity : AppCompatActivity() {
                     for (i in 0 until clipData.itemCount) {
                         val imageUri = clipData.getItemAt(i).uri
                         Log.d("URI", imageUri.toString())
-                        try {
-                            bitmaps.add(imageUri!!)
-                        } catch (e: FileNotFoundException) {
-                            e.printStackTrace()
+
+                        CropImage.activity(imageUri)
+                            .setGuidelines(CropImageView.Guidelines.ON)
+                            .start(this);
+
+                        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+                            val result = CropImage.getActivityResult(data)
+                            if (resultCode === Activity.RESULT_OK) {
+                                _imagefileUri = result.uri
+                                bitmaps.add(_imagefileUri!!)
+                            } else if (resultCode === CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                                val error = result.error
+                                Toast.makeText(this,"$error", Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 }else {
                     //single image selected
                     val imageUri = data.data
                     Log.d("URI", imageUri.toString())
-                    try {
-                        bitmaps.add(imageUri!!)
-                    } catch (e: FileNotFoundException) {
-                        e.printStackTrace()
+
+                    CropImage.activity(imageUri)
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .start(this);
+
+                    if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+                        val result = CropImage.getActivityResult(data)
+                        if (resultCode === Activity.RESULT_OK) {
+                            _imagefileUri = result.uri
+                            bitmaps.add(_imagefileUri!!)
+                        } else if (resultCode === CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                            val error = result.error
+                            Toast.makeText(this,"$error", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             }else{
                 if (requestCode == CAMERA){
-                    bitmaps.add(_imagefileUri!!)
+                    CropImage.activity(_imagefileUri)
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .start(this);
+                }
+
+                if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+                    val result = CropImage.getActivityResult(data)
+                    if (resultCode === Activity.RESULT_OK) {
+                        _imagefileUri = result.uri
+                        bitmaps.add(_imagefileUri!!)
+                    } else if (resultCode === CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                        val error = result.error
+                        Toast.makeText(this,"$error", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
+
             if(rv.adapter is ImageAdapter){
                 (rv.adapter as ImageAdapter).addBitmaps(bitmaps)
             }
@@ -201,23 +251,31 @@ class MainActivity : AppCompatActivity() {
             toolbar.inflateMenu(R.menu.toolbar_meanu_for_convert_nd_cancel)
             supportActionBar?.title = ""
         }
+
+        if (bitmaps.isEmpty()){
+            clearAll()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun convert(){
-        val mDialogView = LayoutInflater.from(this).inflate(R.layout.savefile, null)
-        val mBuilder = AlertDialog.Builder(this).setView(mDialogView).setTitle("Save File")
-        val mAlertDialog = mBuilder.show()
-        mDialogView.save.setOnClickListener {
-            saveFileName = mDialogView.savefile.text.toString()
-            fileNameCheack()
-            if(isAlready){
-                isAlready = false
-                Toast.makeText(this, "This name Already exits. please enter different name", Toast.LENGTH_SHORT).show()
-            }else{
-                mAlertDialog.dismiss()
-                createPdf()
+        if (bitmaps.isNotEmpty()){
+            val mDialogView = LayoutInflater.from(this).inflate(R.layout.savefile, null)
+            val mBuilder = AlertDialog.Builder(this).setView(mDialogView).setTitle("Save File")
+            val mAlertDialog = mBuilder.show()
+            mDialogView.save.setOnClickListener {
+                saveFileName = mDialogView.savefile.text.toString()
+                fileNameCheack()
+                if(isAlready){
+                    isAlready = false
+                    Toast.makeText(this, "This name Already exits. please enter different name", Toast.LENGTH_SHORT).show()
+                }else{
+                    mAlertDialog.dismiss()
+                    createPdf()
+                }
             }
+        }else{
+            Toast.makeText(this, "Please select image to covert pdf", Toast.LENGTH_SHORT).show()
         }
     }
 
