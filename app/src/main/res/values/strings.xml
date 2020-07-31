@@ -11,5 +11,22 @@
     <string name="show_pdf">Show PDF</string>
     <string name="file_pdf">file pdf</string>
     <string name="delete_war">Are you sure to delete file</string>
+    <string name="QRcode">Scan QR Code</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="camera_grant">grant camera!</string>
+    <string name="press_again_logout">Press back again and logout</string>
+
+    <string name="crop">Crop</string>
+    <string name="save">Save</string>
+    <string name="export">Export</string>
+    <string name="enhance">Enhance</string>
+    <string name="black">Black_White</string>
+    <string name="reset">Reset</string>
+    <string name="scan">Scan</string>
+    <string name="select_all">Select All</string>
 
 </resources>

@@ -34,13 +34,10 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_main.*
 import kotlinx.android.synthetic.main.savefile.view.*
-import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.toolbar
 import shock.com.imagetopdf.R
-import shock.com.imagetopdf.adapter.CustomAdapt
 import shock.com.imagetopdf.adapter.ImageAdapter
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
@@ -69,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = "Image To PDF"
         permission()
     }
+
 
     override fun onBackPressed() {
         if(bitmaps.isNotEmpty()){
@@ -152,6 +150,9 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
+            R.id.QRCode -> {
+                    startActivity(Intent(this, QRCode::class.java))
+            }
             R.id.sImage -> {
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
@@ -167,6 +168,8 @@ class MainActivity : AppCompatActivity() {
                 _imagefileUri = Uri.fromFile(getFileCamera())
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, _imagefileUri)
                 startActivityForResult(intent2, CAMERA)
+//                val i = Intent(this, ScanActivity::class.java)
+//                startActivity(i)
             }
             R.id.showPDF ->{
                 val i = Intent(this, ShowPDF::class.java)
@@ -259,6 +262,7 @@ class MainActivity : AppCompatActivity() {
         if (bitmaps.isEmpty()){
             clearAll()
         }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -352,11 +356,9 @@ class MainActivity : AppCompatActivity() {
 
         val pdfName: String = saveFileName
         val targetPdf = "$pdfName.pdf"
-        val file = File(child, targetPdf)
 
         //Saving Pdf file in IMAGE COVERT PDF folder
-
-        return file
+        return File(child, targetPdf)
     }
 
     //Checking a camera path/folder

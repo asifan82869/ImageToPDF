@@ -7,6 +7,8 @@
         android:title="@string/select_image"/>
     <item  android:id="@+id/showPDF"
         android:title="@string/show_pdf"/>
+    <item  android:id="@+id/QRCode"
+        android:title="@string/QRcode"/>
     <item android:id="@+id/iCamera"
         android:title="@string/camera"
         app:showAsAction="always"

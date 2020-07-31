@@ -14,4 +14,10 @@
         app:showAsAction="always"
         android:title="@string/delete" />
 
+    <item
+        android:id="@+id/selectAll"
+        android:icon="@drawable/ic_select_all"
+        app:showAsAction="always"
+        android:title="@string/select_all" />
+
 </menu>

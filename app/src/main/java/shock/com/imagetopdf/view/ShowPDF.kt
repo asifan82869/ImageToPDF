@@ -26,6 +26,7 @@ import java.util.*
 
 class ShowPDF : AppCompatActivity() {
     val REQUEST_CODE = 100
+    var selectAll = 0
     private lateinit var adapter : CustomAdapt
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +64,10 @@ class ShowPDF : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
+            R.id.selectAll -> {
+                selectAll = 1
+                (rv.adapter as CustomAdapt).notifyDataSetChanged()
+            }
             R.id.delete -> {
                 val mDialogView = LayoutInflater.from(this).inflate(R.layout.option, null)
                 val mBuilder = AlertDialog.Builder(this).setView(mDialogView).setTitle("Delete File")

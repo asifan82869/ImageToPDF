@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.model.*
+import kotlinx.android.synthetic.main.toolbar.*
 import shock.com.imagetopdf.R
 import shock.com.imagetopdf.view.ShowPDF
 import shock.com.imagetopdf.data.PDFDoc
@@ -32,9 +33,10 @@ class CustomAdapt(private val mContext: ShowPDF, private val pdfDocs: ArrayList<
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var pdfDoc = pdfDocs[position]
-        var name = pdfDoc.getName().toString()
+        val pdfDoc = pdfDocs[position]
+        val name = pdfDoc.getName().toString()
         holder.nameTxt.text = name
+
         if (!inSharingMode){
             holder.checkbox.visibility = View.GONE
             pdfDoc.isChecked = false
@@ -51,6 +53,7 @@ class CustomAdapt(private val mContext: ShowPDF, private val pdfDocs: ArrayList<
                 listener.openPDFView(pdfDoc.getPath(), name)
             }
         }
+
         holder.itemView.setOnLongClickListener{
             if (!inSharingMode){
                 listener.onLongClick()
@@ -58,10 +61,10 @@ class CustomAdapt(private val mContext: ShowPDF, private val pdfDocs: ArrayList<
             }
             true
         }
+
         holder.checkbox.setOnCheckedChangeListener { compoundButton, b ->
-            if(pdfDoc.isChecked != b) {
-                pdfDoc.isChecked = true
-                Toast.makeText(mContext, "hi", Toast.LENGTH_LONG).show()
+            if (pdfDoc.isChecked != !b){
+                pdfDoc.isChecked = b
             }
         }
     }
@@ -100,13 +103,13 @@ class CustomAdapt(private val mContext: ShowPDF, private val pdfDocs: ArrayList<
 
     fun deletePdfs() {
         val selectedPdfs = getSelectedPdfs()
-        var s = pdfDocs.size
+        val s = pdfDocs.size-1
         if(selectedPdfs.isNotEmpty()) {
-            for (i in 0 until s) {
+            for (i in s downTo 0) {
                 val pdf = pdfDocs[i]
                 for (selectedPdf in selectedPdfs) {
                     if (pdf.getPath()?.equals(selectedPdf.getPath()) == true) {
-                        val file = File(selectedPdf.getPath())
+                        val file = File(selectedPdf.getPath()!!)
                         file.delete()
                         pdfDocs.removeAt(i)
                         break
@@ -117,6 +120,7 @@ class CustomAdapt(private val mContext: ShowPDF, private val pdfDocs: ArrayList<
         }else{
             Toast.makeText(mContext,"Please Select a file for delete", Toast.LENGTH_LONG).show()
         }
+
     }
 
     private fun getSelectedPdfs():ArrayList<PDFDoc>{
